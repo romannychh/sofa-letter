@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Письмо для Софы</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#fffdf9;
+    --bg:#fbf7f3;
+    --ink:#3a2e2a;
+    --soft:#8c7a72;
+    --rose:#c98b8f;
+    --rose-deep:#a85d66;
+    --gold:#c7a46a;
+    --line:rgba(199,164,106,.35);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{background:var(--bg);color:var(--ink)}
+  body{
+    font-family:"Cormorant Garamond",Georgia,serif;
+    min-height:100vh;overflow-x:hidden;
+    background:
+      radial-gradient(1200px 600px at 50% -10%,#fff 0%,rgba(255,255,255,0) 70%),
+      radial-gradient(600px 400px at 100% 100%,#f8ece8 0%,rgba(248,236,232,0) 70%),
+      var(--bg);
+  }
+  .script{font-family:"Great Vibes",cursive;font-weight:400}
+
+  /* floating hearts */
+  #sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .fh{position:absolute;bottom:-40px;color:var(--rose);opacity:.0;animation:rise linear forwards}
+  @keyframes rise{
+    0%{transform:translateY(0) translateX(0) rotate(0);opacity:0}
+    10%{opacity:.55}
+    100%{transform:translateY(-110vh) translateX(var(--dx)) rotate(var(--r));opacity:0}
+  }
+
+  /* ---------- gate ---------- */
+  #gate{
+    position:fixed;inset:0;z-index:10;display:flex;flex-direction:column;
+    align-items:center;justify-content:center;padding:24px 20px;text-align:center;
+    transition:opacity .9s ease, transform .9s ease;
+  }
+  #gate.hide{opacity:0;transform:scale(1.04);pointer-events:none}
+  .gate-cupid{width:150px;filter:drop-shadow(0 10px 18px rgba(120,70,50,.18));animation:float 5s ease-in-out infinite}
+  @keyframes float{50%{transform:translateY(-8px) rotate(-1.5deg)}}
+
+  .envelope{
+    position:relative;width:min(300px,80vw);aspect-ratio:1.55;margin:10px 0 26px;
+    background:linear-gradient(180deg,#fff,#f7f0ea);border-radius:6px;
+    box-shadow:0 18px 40px -16px rgba(120,80,60,.35),0 0 0 1px rgba(199,164,106,.25) inset;
+  }
+  .envelope:before{ /* flap */
+    content:"";position:absolute;left:0;right:0;top:0;height:58%;
+    background:linear-gradient(180deg,#fff 0%,#f3e9e1 100%);
+    clip-path:polygon(0 0,100% 0,50% 100%);
+    border-bottom:1px solid var(--line);
+    filter:drop-shadow(0 2px 2px rgba(0,0,0,.05));
+    transform-origin:top;transition:transform .8s ease;
+  }
+  .envelope:after{
+    content:"";position:absolute;inset:0;border-radius:6px;
+    background:linear-gradient(to top right,transparent 49.6%,var(--line) 50%,transparent 50.4%) left/50% 100% no-repeat,
+               linear-gradient(to top left,transparent 49.6%,var(--line) 50%,transparent 50.4%) right/50% 100% no-repeat;
+    opacity:.7;pointer-events:none;
+  }
+  .envelope.open:before{transform:rotateX(180deg)}
+  .seal{
+    position:absolute;left:50%;top:58%;transform:translate(-50%,-50%);z-index:2;
+    width:64px;height:64px;border-radius:50%;
+    background:radial-gradient(circle at 35% 30%,#d98a92,#a2414f 60%,#7c2c38);
+    box-shadow:0 4px 10px rgba(124,44,56,.4),inset 0 -3px 6px rgba(0,0,0,.25),inset 0 3px 5px rgba(255,255,255,.25);
+    display:grid;place-items:center;color:#fbe9e4;font-size:30px;
+    transition:transform .6s ease, opacity .6s ease;
+  }
+  .seal span{font-family:"Great Vibes",cursive;transform:translateY(2px)}
+  .envelope.open .seal{transform:translate(-50%,-50%) scale(.2) rotate(40deg);opacity:0}
+
+  .stamp{font-size:13px;letter-spacing:.32em;text-transform:uppercase;color:var(--rose-deep);font-weight:600}
+  .gate-title{font-size:56px;line-height:1;color:var(--ink);margin:8px 0 4px}
+  .gate-sub{font-style:italic;font-size:19px;color:var(--soft);max-width:300px}
+
+  .q{margin-top:22px;font-size:22px;font-weight:500}
+  .btns{position:relative;display:flex;gap:14px;justify-content:center;margin-top:14px;min-height:52px;width:100%}
+  .btn{
+    font-family:inherit;font-size:19px;font-weight:600;letter-spacing:.04em;
+    padding:12px 30px;border-radius:999px;border:1px solid var(--rose);cursor:pointer;
+    transition:transform .25s ease, left .35s ease, top .35s ease;
+  }
+  .btn-yes{background:linear-gradient(180deg,#c98b8f,#a85d66);color:#fff;border-color:transparent;box-shadow:0 8px 20px -8px rgba(168,93,102,.7)}
+  .btn-yes:active{transform:scale(.96)}
+  .btn-no{background:#fff;color:var(--rose-deep)}
+  .btn-no.run{position:absolute}
+  .warn{min-height:22px;margin-top:12px;font-style:italic;color:var(--rose-deep);font-size:17px}
+
+  /* ---------- letter ---------- */
+  #letter{position:relative;z-index:1;opacity:0;transform:translateY(30px);transition:opacity 1.2s ease .2s, transform 1.2s ease .2s;padding:28px 16px 60px}
+  #letter.show{opacity:1;transform:none}
+  #letter[hidden]{display:none}
+
+  .hero{position:relative;max-width:520px;margin:0 auto;text-align:center}
+  .cupids{display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:-30px;position:relative;z-index:2;padding:0 4px}
+  .cupids img{width:110px;filter:drop-shadow(0 8px 14px rgba(120,70,50,.18))}
+  .cupids img:last-child{transform:scaleX(-1)}
+  .cupids .c1{animation:float 6s ease-in-out infinite}
+  .cupids .c2{animation:float 6s ease-in-out infinite 1.5s}
+
+  .paper{
+    position:relative;max-width:520px;margin:0 auto;background:var(--paper);
+    border-radius:4px;padding:56px 28px 40px;
+    box-shadow:0 30px 60px -30px rgba(110,70,50,.35),0 2px 0 rgba(255,255,255,.8) inset;
+  }
+  .paper:before{ /* gold double frame */
+    content:"";position:absolute;inset:10px;border:1px solid var(--line);border-radius:2px;pointer-events:none;
+    box-shadow:0 0 0 4px var(--paper),0 0 0 5px rgba(199,164,106,.18);
+  }
+
+  .kicker{font-size:12px;letter-spacing:.38em;text-transform:uppercase;color:var(--rose-deep);font-weight:600;text-align:center}
+  h1{font-family:"Great Vibes",cursive;font-weight:400;font-size:68px;line-height:1;text-align:center;margin:10px 0 2px;color:var(--ink)}
+  .orn{display:flex;align-items:center;gap:12px;justify-content:center;color:var(--gold);margin:14px 0 26px}
+  .orn:before,.orn:after{content:"";height:1px;width:70px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+
+  .photo-hero{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:2px;display:block;margin:0 0 28px;box-shadow:0 14px 30px -18px rgba(0,0,0,.35)}
+
+  p.t{font-size:21px;line-height:1.55;margin:0 0 18px}
+  p.t em{color:var(--rose-deep)}
+  .drop:first-letter{font-family:"Great Vibes",cursive;font-size:64px;float:left;line-height:.8;padding:6px 8px 0 0;color:var(--rose-deep)}
+  .big{font-size:24px;font-weight:500;font-style:italic;text-align:center;margin:26px 0}
+
+  .card{
+    margin:30px 0;padding:24px 20px;text-align:center;border-radius:4px;
+    background:linear-gradient(180deg,#fdf6f2,#fbf0ec);border:1px solid rgba(201,139,143,.25)
+  }
+  .card .lbl{font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--soft);font-weight:600}
+  .card .when{font-family:"Great Vibes",cursive;font-size:52px;line-height:1.1;color:var(--rose-deep);margin:4px 0}
+  .card .where{font-size:22px;font-weight:500}
+  .count{display:flex;justify-content:center;gap:10px;margin-top:16px}
+  .count div{min-width:58px;padding:8px 4px;background:#fff;border-radius:4px;border:1px solid var(--line)}
+  .count b{display:block;font-size:26px;font-weight:600;font-variant-numeric:tabular-nums}
+  .count small{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--soft)}
+
+  .polas{display:flex;justify-content:center;gap:0;margin:34px 0 30px}
+  .pola{background:#fff;padding:8px 8px 30px;box-shadow:0 12px 26px -14px rgba(0,0,0,.4);width:48%;position:relative}
+  .pola img{width:100%;aspect-ratio:1;object-fit:cover;display:block}
+  .pola span{position:absolute;left:0;right:0;bottom:4px;text-align:center;font-family:"Great Vibes",cursive;font-size:20px;color:var(--soft)}
+  .pola:nth-child(1){transform:rotate(-5deg) translateX(8px)}
+  .pola:nth-child(2){transform:rotate(4deg) translate(-8px,14px)}
+
+  .hint{
+    margin:30px 0;padding:20px 20px 20px 22px;border-left:2px solid var(--gold);
+    background:linear-gradient(90deg,rgba(199,164,106,.08),transparent);font-style:italic;font-size:21px;line-height:1.5
+  }
+  .hint b{font-style:normal;font-size:12px;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:6px}
+
+  h2{font-size:13px;letter-spacing:.34em;text-transform:uppercase;color:var(--rose-deep);font-weight:600;text-align:center;margin:34px 0 16px}
+  ul.take{list-style:none;max-width:340px;margin:0 auto}
+  ul.take li{display:flex;align-items:center;gap:14px;font-size:21px;padding:12px 4px;border-bottom:1px dashed var(--line)}
+  ul.take li:last-child{border-bottom:0}
+  ul.take i{font-style:normal;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:#fbefec;flex:none;font-size:18px}
+
+  .wide{width:100%;aspect-ratio:16/9;object-fit:cover;border-radius:2px;display:block;margin:34px 0 10px;filter:saturate(.9)}
+
+  .trust{font-family:"Great Vibes",cursive;font-size:46px;text-align:center;color:var(--rose-deep);margin:26px 0 6px}
+  .sign{text-align:right;margin-top:30px;padding-right:6px}
+  .sign small{display:block;font-style:italic;color:var(--soft);font-size:18px}
+  .sign .r{font-family:"Great Vibes",cursive;font-size:84px;line-height:.9;color:var(--ink)}
+
+  .foot{text-align:center;margin-top:26px;font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--soft)}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .9s ease, transform .9s ease}
+  .reveal.in{opacity:1;transform:none}
+
+  @media (max-width:380px){
+    h1{font-size:58px}
+    .paper{padding:52px 20px 34px}
+    p.t{font-size:20px}
+    .cupids img{width:92px}
+  }
+</style>
+</head>
+<body>
+<div id="sky"></div>
+
+<!-- ворота: только для Софы -->
+<section id="gate">
+  <img class="gate-cupid" src="img/cherubs.png" alt="">
+  <div class="stamp">Лично в руки</div>
+  <div class="gate-title script">для Софы</div>
+  <div class="gate-sub">Посторонним прочтение строго запрещено</div>
+
+  <div class="envelope" id="env"><div class="seal"><span>R</span></div></div>
+
+  <div class="q">Ты Софа?</div>
+  <div class="btns" id="btns">
+    <button class="btn btn-yes" id="yes">Да, это я</button>
+    <button class="btn btn-no" id="no">Нет</button>
+  </div>
+  <div class="warn" id="warn"></div>
+</section>
+
+<!-- письмо -->
+<main id="letter" hidden>
+  <div class="hero">
+    <div class="cupids">
+      <img class="c1" src="img/cherubs.png" alt="">
+      <img class="c2" src="img/cherubs.png" alt="">
+    </div>
+  </div>
+
+  <article class="paper">
+    <div class="kicker">Персонально для Софы</div>
+    <h1>Моя Софа</h1>
+    <div class="orn">❦</div>
+
+    <img class="photo-hero reveal" src="img/tulips.jpg" alt="">
+
+    <p class="t drop reveal">Это письмо я написал тебе лично. И это не просто письмо.</p>
+    <p class="t reveal">Это <em>приглашение</em> провести со мной вечер, который я целиком и полностью спланировал сам.</p>
+
+    <div class="card reveal">
+      <div class="lbl">Завтра</div>
+      <div class="when">в 21:00</div>
+      <div class="where">ко 2 КПП подъедет машина</div>
+      <div class="count" id="count">
+        <div><b id="ch">00</b><small>часов</small></div>
+        <div><b id="cm">00</b><small>минут</small></div>
+        <div><b id="cs">00</b><small>секунд</small></div>
+      </div>
+    </div>
+
+    <p class="t reveal">Тебе нужно сесть в неё и отпустить все свои мысли. Что, куда, зачем: оставь всё это мне и просто расслабься.</p>
+
+    <div class="polas reveal">
+      <div class="pola"><img src="img/candles.jpg" alt=""><span>только мы</span></div>
+      <div class="pola"><img src="img/hearts.jpg" alt=""><span>и этот вечер</span></div>
+    </div>
+
+    <div class="hint reveal">
+      <b>Подсказка</b>
+      Ты была в этом месте кучу раз, но этот будет особенным.
+    </div>
+
+    <h2 class="reveal">Что взять с собой</h2>
+    <ul class="take reveal">
+      <li><i>👗</i>Сменную одежду</li>
+      <li><i>✨</i>Хорошее настроение</li>
+      <li><i>😊</i>Свою обаятельную улыбку</li>
+    </ul>
+
+    <img class="wide reveal" src="img/bikes.jpg" alt="">
+
+    <div class="trust reveal">Доверься мне ❤️</div>
+
+    <div class="sign reveal">
+      <div class="r">R.</div>
+    </div>
+  </article>
+
+  <div class="foot">❦ &nbsp;до встречи&nbsp; ❦</div>
+</main>
+
+<script>
+  const tg = window.Telegram && Telegram.WebApp;
+  if (tg) {
+    tg.ready(); tg.expand();
+    try { tg.setHeaderColor('#fbf7f3'); tg.setBackgroundColor('#fbf7f3'); } catch(e){}
+  }
+  const haptic = (t) => { try { tg && tg.HapticFeedback.impactOccurred(t || 'light'); } catch(e){} };
+
+  // летящие сердечки
+  const sky = document.getElementById('sky');
+  const glyphs = ['♥','❤','♡'];
+  function heart(){
+    const h = document.createElement('span');
+    h.className = 'fh';
+    h.textContent = glyphs[Math.random()*glyphs.length|0];
+    h.style.left = Math.random()*100 + 'vw';
+    h.style.fontSize = (10 + Math.random()*18) + 'px';
+    h.style.setProperty('--dx', (Math.random()*120-60) + 'px');
+    h.style.setProperty('--r', (Math.random()*80-40) + 'deg');
+    h.style.animationDuration = (9 + Math.random()*8) + 's';
+    sky.appendChild(h);
+    setTimeout(() => h.remove(), 18000);
+  }
+  for (let i=0;i<6;i++) setTimeout(heart, i*500);
+  setInterval(heart, 1100);
+
+  // кнопка «Нет» убегает
+  const no = document.getElementById('no'), btns = document.getElementById('btns'), warn = document.getElementById('warn');
+  const lines = ['Посторонним нельзя 🙅‍♂️','Купидоны не пропустят','Попробуй ещё раз 😉','Это письмо не для тебя','Только Софа может открыть'];
+  let tries = 0;
+  function runAway(e){
+    e && e.preventDefault();
+    haptic('rigid');
+    no.classList.add('run');
+    const w = btns.clientWidth - no.offsetWidth, h = 120;
+    no.style.left = Math.max(0, Math.random()*w) + 'px';
+    no.style.top = (Math.random()*h - 40) + 'px';
+    warn.textContent = lines[tries++ % lines.length];
+  }
+  no.addEventListener('touchstart', runAway, {passive:false});
+  no.addEventListener('mouseenter', runAway);
+  no.addEventListener('click', runAway);
+
+  // «Да» — вскрываем конверт
+  document.getElementById('yes').addEventListener('click', () => {
+    try { tg && tg.HapticFeedback.notificationOccurred('success'); } catch(e){}
+    document.getElementById('env').classList.add('open');
+    for (let i=0;i<14;i++) setTimeout(heart, i*60);
+    setTimeout(() => {
+      document.getElementById('gate').classList.add('hide');
+      const l = document.getElementById('letter');
+      l.hidden = false;
+      requestAnimationFrame(() => requestAnimationFrame(() => l.classList.add('show')));
+      window.scrollTo(0,0);
+      setTimeout(() => document.getElementById('gate').remove(), 1000);
+    }, 1100);
+  });
+
+  // плавное появление при скролле
+  const io = new IntersectionObserver(es => es.forEach(e => {
+    if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+  }), {threshold:.15});
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // обратный отсчёт до 14.10.2026 21:00 (МСК)
+  const target = new Date('2026-10-14T21:00:00+03:00').getTime();
+  const pad = n => String(n).padStart(2,'0');
+  function tick(){
+    let d = Math.max(0, target - Date.now());
+    if (d === 0){ document.getElementById('count').innerHTML = '<div style="padding:8px 16px"><b style="font-size:20px">Машина уже ждёт ❤️</b></div>'; return; }
+    const s = Math.floor(d/1000);
+    document.getElementById('ch').textContent = pad(Math.floor(s/3600));
+    document.getElementById('cm').textContent = pad(Math.floor(s%3600/60));
+    document.getElementById('cs').textContent = pad(s%60);
+    setTimeout(tick, 1000);
+  }
+  tick();
+</script>
+</body>
+</html>
