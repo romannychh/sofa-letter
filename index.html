@@ -214,16 +214,16 @@
 
   <article class="paper">
     <div class="kicker">Персонально для Софы</div>
-    <h1>Моя Софа</h1>
+    <h1>Солнце Софа</h1>
     <div class="orn">❦</div>
 
-    <img class="photo-hero reveal" src="img/tulips.jpg" alt="">
+    <img class="photo-hero reveal" src="img/roses.jpg" alt="">
 
     <p class="t drop reveal">Это письмо я написал тебе лично. И это не просто письмо.</p>
     <p class="t reveal">Это <em>приглашение</em> провести со мной вечер, который я целиком и полностью спланировал сам.</p>
 
     <div class="card reveal">
-      <div class="lbl">Завтра</div>
+      <div class="lbl">15 октября</div>
       <div class="when">в 21:00</div>
       <div class="where">ко 2 КПП подъедет машина</div>
       <div class="count" id="count">
@@ -328,8 +328,8 @@
   }), {threshold:.15});
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  // обратный отсчёт до 14.10.2026 21:00 (МСК)
-  const target = new Date('2026-10-14T21:00:00+03:00').getTime();
+  // обратный отсчёт до 15.10.2026 21:00 (МСК)
+  const target = new Date('2026-10-15T21:00:00+03:00').getTime();
   const pad = n => String(n).padStart(2,'0');
   function tick(){
     let d = Math.max(0, target - Date.now());
