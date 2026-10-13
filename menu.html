@@ -76,7 +76,6 @@
       <label class="opt"><input type="checkbox" value="Обнимашки без ограничения по времени"><span class="box"></span><span class="name">Обнимашки без ограничения по времени</span><span class="price">0 ₽</span></label>
       <label class="opt"><input type="checkbox" value="Завтрак в постель"><span class="box"></span><span class="name">Завтрак в постель</span><span class="price">0 ₽</span></label>
       <label class="opt"><input type="checkbox" value="Фото на память"><span class="box"></span><span class="name">Фото на память</span><span class="price">0 ₽</span></label>
-      <label class="opt special"><input type="checkbox" value="Стать твоей девушкой ❤️"><span class="box"></span><span class="name">Стать моей девушкой</span><span class="price">бесценно</span></label>
     </div>
 
     <input class="own" id="own" type="text" placeholder="Свой вариант…" maxlength="120">
@@ -116,7 +115,6 @@
   const save = () => { try { localStorage.setItem(KEY, JSON.stringify({picked: opts.filter(o=>o.checked).map(o=>o.value), own: own.value})); } catch(e){} };
   opts.forEach(o => o.addEventListener('change', () => {
     save(); hap(h => h.selectionChanged());
-    if (o.checked && o.closest('.special')) for (let i=0;i<18;i++) setTimeout(heart, i*50);
   }));
   own.addEventListener('input', save);
 
