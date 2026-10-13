@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
+<title>Меню вечера</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+  :root{--paper:#fffdf9;--bg:#fbf7f3;--ink:#3a2e2a;--soft:#8c7a72;--rose:#c98b8f;--rose-deep:#a85d66;--gold:#c7a46a;--line:rgba(199,164,106,.35)}
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+  html,body{background:var(--bg);color:var(--ink)}
+  body{font-family:"Cormorant Garamond",Georgia,serif;min-height:100vh;overflow-x:hidden;padding:28px 16px 50px;
+    background:radial-gradient(1200px 600px at 50% -10%,#fff 0%,rgba(255,255,255,0) 70%),radial-gradient(600px 400px at 100% 100%,#f8ece8 0%,rgba(248,236,232,0) 70%),var(--bg)}
+
+  #sky{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
+  .fh{position:absolute;bottom:-40px;color:var(--rose);opacity:0;animation:rise linear forwards}
+  @keyframes rise{0%{transform:translateY(0);opacity:0}10%{opacity:.55}100%{transform:translateY(-110vh) translateX(var(--dx)) rotate(var(--r));opacity:0}}
+  @keyframes float{50%{transform:translateY(-8px) rotate(-1.5deg)}}
+
+  .wrap{position:relative;z-index:1;max-width:520px;margin:0 auto;animation:in 1s ease both}
+  @keyframes in{from{opacity:0;transform:translateY(24px)}}
+  .cupid{display:block;width:120px;margin:0 auto -26px;position:relative;z-index:2;filter:drop-shadow(0 8px 14px rgba(120,70,50,.18));animation:float 6s ease-in-out infinite}
+
+  .paper{position:relative;background:var(--paper);border-radius:4px;padding:52px 22px 34px;box-shadow:0 30px 60px -30px rgba(110,70,50,.35)}
+  .paper:before{content:"";position:absolute;inset:10px;border:1px solid var(--line);border-radius:2px;pointer-events:none;box-shadow:0 0 0 4px var(--paper),0 0 0 5px rgba(199,164,106,.18)}
+
+  .kicker{font-size:12px;letter-spacing:.38em;text-transform:uppercase;color:var(--rose-deep);font-weight:600;text-align:center}
+  h1{font-family:"Great Vibes",cursive;font-weight:400;font-size:58px;line-height:1.05;text-align:center;margin:10px 0 0}
+  .orn{display:flex;align-items:center;gap:12px;justify-content:center;color:var(--gold);margin:12px 0 14px}
+  .orn:before,.orn:after{content:"";height:1px;width:70px;background:linear-gradient(90deg,transparent,var(--gold),transparent)}
+  .sub{text-align:center;font-style:italic;color:var(--soft);font-size:19px;margin-bottom:20px}
+
+  .opt{display:flex;align-items:center;gap:14px;padding:13px 4px;border-bottom:1px dashed var(--line);cursor:pointer;user-select:none}
+  .opt input{display:none}
+  .box{width:26px;height:26px;flex:none;border:1.5px solid var(--rose);border-radius:6px;display:grid;place-items:center;transition:background .25s,transform .25s}
+  .box:after{content:"✓";color:#fff;font-size:17px;font-weight:700;opacity:0;transform:scale(.4);transition:all .25s}
+  .opt input:checked + .box{background:var(--rose-deep);border-color:var(--rose-deep);transform:scale(1.06)}
+  .opt input:checked + .box:after{opacity:1;transform:none}
+  .name{flex:1;font-size:20px;line-height:1.25}
+  .price{font-size:15px;color:var(--soft);font-style:italic;white-space:nowrap}
+  .opt.special{margin:16px -6px 0;padding:16px 10px;border:1px solid rgba(168,93,102,.35);border-radius:6px;background:linear-gradient(180deg,#fdf3f1,#fbeae8)}
+  .opt.special .name{font-family:"Great Vibes",cursive;font-size:32px;color:var(--rose-deep);line-height:1}
+  .opt.special .price{color:var(--rose-deep)}
+
+  .own{width:100%;margin-top:16px;font-family:inherit;font-size:19px;padding:12px 14px;border:1px solid var(--line);border-radius:4px;background:#fff;color:var(--ink);outline:none}
+  .own:focus{border-color:var(--rose)}
+  .send{display:block;width:100%;margin-top:18px;font-family:inherit;font-size:20px;font-weight:600;letter-spacing:.04em;padding:14px;border:0;border-radius:999px;color:#fff;cursor:pointer;
+    background:linear-gradient(180deg,#c98b8f,#a85d66);box-shadow:0 8px 20px -8px rgba(168,93,102,.7)}
+  .send:active{transform:scale(.98)}
+  .sent{text-align:center;font-style:italic;color:var(--rose-deep);font-size:18px;min-height:24px;margin-top:10px}
+  .sign{text-align:right;font-family:"Great Vibes",cursive;font-size:70px;line-height:.9;margin-top:18px;padding-right:6px}
+</style>
+</head>
+<body>
+<div id="sky"></div>
+<div class="wrap">
+  <img class="cupid" src="img/cherubs.png" alt="">
+  <article class="paper">
+    <div class="kicker">Только для Софы</div>
+    <h1>Меню этого вечера</h1>
+    <div class="orn">❦</div>
+    <div class="sub">Отметь всё, что хочешь.<br>Всё включено, платить не нужно</div>
+
+    <div id="menu">
+      <label class="opt"><input type="checkbox" value="Просмотр сериала или фильма"><span class="box"></span><span class="name">Просмотр сериала или фильма</span><span class="price">0 ₽</span></label>
+      <label class="opt"><input type="checkbox" value="Доставка еды"><span class="box"></span><span class="name">Доставка еды</span><span class="price">0 ₽</span></label>
+      <label class="opt"><input type="checkbox" value="Прогулка на свежем воздухе"><span class="box"></span><span class="name">Прогулка на свежем воздухе</span><span class="price">0 ₽</span></label>
+      <label class="opt"><input type="checkbox" value="Массаж шеи и спины"><span class="box"></span><span class="name">Массаж шеи и спины</span><span class="price">0 ₽</span></label>
+      <label class="opt"><input type="checkbox" value="Медленный танец под мою песню"><span class="box"></span><span class="name">Медленный танец под твою песню</span><span class="price">0 ₽</span></label>
+      <label class="opt"><input type="checkbox" value="Обнимашки без ограничения по времени"><span class="box"></span><span class="name">Обнимашки без ограничения по времени</span><span class="price">0 ₽</span></label>
+      <label class="opt"><input type="checkbox" value="Завтрак в постель"><span class="box"></span><span class="name">Завтрак в постель</span><span class="price">0 ₽</span></label>
+      <label class="opt"><input type="checkbox" value="Фото на память"><span class="box"></span><span class="name">Фото на память</span><span class="price">0 ₽</span></label>
+      <label class="opt special"><input type="checkbox" value="Стать твоей девушкой ❤️"><span class="box"></span><span class="name">Стать моей девушкой</span><span class="price">бесценно</span></label>
+    </div>
+
+    <input class="own" id="own" type="text" placeholder="Свой вариант…" maxlength="120">
+    <button class="send" id="send">Отправить Руслану 💌</button>
+    <div class="sent" id="sent"></div>
+
+    <div class="sign">R.</div>
+  </article>
+</div>
+
+<script>
+  const tg = window.Telegram && Telegram.WebApp && Telegram.WebApp.initData !== undefined ? Telegram.WebApp : null;
+  if (tg) { try { tg.ready(); tg.expand(); tg.setHeaderColor('#fbf7f3'); tg.setBackgroundColor('#fbf7f3'); } catch(e){} }
+  const hap = f => { try { tg && f(tg.HapticFeedback); } catch(e){} };
+
+  const sky = document.getElementById('sky');
+  function heart(){
+    const h = document.createElement('span');
+    h.className = 'fh'; h.textContent = ['♥','❤','♡'][Math.random()*3|0];
+    h.style.left = Math.random()*100 + 'vw';
+    h.style.fontSize = (10 + Math.random()*18) + 'px';
+    h.style.setProperty('--dx', (Math.random()*120-60) + 'px');
+    h.style.setProperty('--r', (Math.random()*80-40) + 'deg');
+    h.style.animationDuration = (9 + Math.random()*8) + 's';
+    sky.appendChild(h); setTimeout(() => h.remove(), 18000);
+  }
+  setInterval(heart, 1300);
+
+  const opts = [...document.querySelectorAll('#menu input')];
+  const own = document.getElementById('own');
+  const KEY = 'sofa-menu';
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY) || '{}');
+    opts.forEach(o => o.checked = (saved.picked || []).includes(o.value));
+    own.value = saved.own || '';
+  } catch(e){}
+  const save = () => { try { localStorage.setItem(KEY, JSON.stringify({picked: opts.filter(o=>o.checked).map(o=>o.value), own: own.value})); } catch(e){} };
+  opts.forEach(o => o.addEventListener('change', () => {
+    save(); hap(h => h.selectionChanged());
+    if (o.checked && o.closest('.special')) for (let i=0;i<18;i++) setTimeout(heart, i*50);
+  }));
+  own.addEventListener('input', save);
+
+  document.getElementById('send').addEventListener('click', () => {
+    const picked = opts.filter(o=>o.checked).map(o=>o.value);
+    if (own.value.trim()) picked.push(own.value.trim());
+    const out = document.getElementById('sent');
+    if (!picked.length){ out.textContent = 'Отметь хотя бы что-нибудь 🙂'; return; }
+    const text = 'Мой выбор на этот вечер:\n' + picked.map(p => '✓ ' + p).join('\n');
+    const link = 'https://t.me/share/url?url=' + encodeURIComponent(text);
+    hap(h => h.notificationOccurred('success'));
+    if (tg && tg.openTelegramLink) tg.openTelegramLink(link); else location.href = link;
+    out.textContent = 'Выбери Руслана в списке чатов и отправь ❤️';
+  });
+</script>
+</body>
+</html>
