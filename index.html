@@ -170,6 +170,12 @@
   .sign small{display:block;font-style:italic;color:var(--soft);font-size:18px}
   .sign .r{font-family:"Great Vibes",cursive;font-size:84px;line-height:.9;color:var(--ink)}
 
+  .ps{max-width:520px;margin:22px auto 0;padding:16px 18px;text-align:center;border:1px dashed var(--line);border-radius:4px;background:rgba(255,255,255,.6)}
+  .ps p{font-style:italic;font-size:17px;color:var(--soft);line-height:1.45}
+  .ps b{font-style:normal;font-size:11px;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);display:block;margin-bottom:6px}
+  .scan{margin-top:12px;font-family:inherit;font-size:17px;font-weight:600;letter-spacing:.04em;padding:10px 22px;border-radius:999px;border:1px solid var(--rose);background:#fff;color:var(--rose-deep);cursor:pointer}
+  .scan:active{transform:scale(.97)}
+  .scan-msg{min-height:20px;margin-top:8px;font-style:italic;font-size:15px;color:var(--rose-deep)}
   .foot{text-align:center;margin-top:26px;font-size:13px;letter-spacing:.3em;text-transform:uppercase;color:var(--soft)}
 
   .reveal{opacity:0;transform:translateY(18px);transition:opacity .9s ease, transform .9s ease}
@@ -261,6 +267,13 @@
     </div>
   </article>
 
+  <div class="ps">
+    <b>P.S.</b>
+    <p>Этим вечером тебе может попасться QR-код. Сканируй его только здесь</p>
+    <button class="scan" id="scan">⌗ Сканировать QR</button>
+    <div class="scan-msg" id="scanMsg"></div>
+  </div>
+
   <div class="foot">❦ &nbsp;до встречи&nbsp; ❦</div>
 </main>
 
@@ -327,6 +340,29 @@
     if (e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
   }), {threshold:.15});
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // сканер QR через Telegram
+  const scanMsg = document.getElementById('scanMsg');
+  document.getElementById('scan').addEventListener('click', () => {
+    if (!tg || !tg.showScanQrPopup || !tg.isVersionAtLeast || !tg.isVersionAtLeast('6.4')) {
+      scanMsg.textContent = 'Сканер работает, когда письмо открыто в Telegram';
+      return;
+    }
+    haptic('light');
+    tg.showScanQrPopup({ text: 'Наведи камеру на QR-код' }, (data) => {
+      const raw = String(data || '').trim();
+      let url;
+      try { url = new URL(raw, location.href); } catch(e) { return false; }
+      // открываем только страницы этого письма
+      if (url.origin === location.origin && url.pathname.startsWith(location.pathname.replace(/[^/]*$/, ''))) {
+        try { tg.HapticFeedback.notificationOccurred('success'); } catch(e){}
+        setTimeout(() => { location.href = url.href; }, 250);
+        return true;
+      }
+      scanMsg.textContent = 'Этот код не из нашего квеста 🙂';
+      return true;
+    });
+  });
 
   // обратный отсчёт до 15.10.2026 21:00 (МСК)
   const target = new Date('2026-10-15T21:00:00+03:00').getTime();
